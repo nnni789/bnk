@@ -1,174 +1,575 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Pressure Ulcer Risk Assessment</title>
 
+  <!-- FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CHART -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7fb;
-      margin: 0;
-      padding: 20px;
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:'Poppins',sans-serif;
     }
 
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    body{
+      background:#f5f6fa;
+      color:#222;
     }
 
-    h1 {
-      text-align: center;
-      color: #1d3557;
+    /* HEADER */
+
+    .hero{
+      background:linear-gradient(90deg,#3f51ff,#9c1fff);
+      color:white;
+      text-align:center;
+      padding:40px 20px;
     }
 
-    p {
-      text-align: center;
-      color: #555;
+    .hero h1{
+      font-size:42px;
+      font-weight:700;
+      margin-bottom:10px;
     }
 
-    .form-group {
-      margin: 20px 0;
+    .hero p{
+      font-size:18px;
+      opacity:.9;
     }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 8px;
+    /* TABS */
+
+    .tabs{
+      background:white;
+      display:flex;
+      justify-content:center;
+      border-bottom:1px solid #ddd;
     }
 
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+    .tab-btn{
+      flex:1;
+      max-width:300px;
+      padding:18px;
+      border:none;
+      background:white;
+      cursor:pointer;
+      font-size:16px;
+      font-weight:500;
+      transition:.3s;
+      border-bottom:3px solid transparent;
     }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background: #1d3557;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      margin-top: 20px;
+    .tab-btn.active{
+      color:#5b5cf0;
+      border-bottom:3px solid #5b5cf0;
     }
 
-    button:hover {
-      background: #274c77;
+    /* CONTENT */
+
+    .container{
+      width:90%;
+      max-width:900px;
+      margin:40px auto;
     }
 
-    .result {
-      margin-top: 30px;
-      padding: 20px;
-      border-radius: 10px;
-      background: #eef4ff;
-      display: none;
+    .card{
+      background:white;
+      border-radius:20px;
+      padding:30px;
+      margin-bottom:30px;
+      box-shadow:0 2px 10px rgba(0,0,0,.05);
     }
 
-    .risk-low {
-      color: green;
-      font-weight: bold;
+    .card h2{
+      margin-bottom:20px;
+      font-size:28px;
+      color:#222;
     }
 
-    .risk-medium {
-      color: orange;
-      font-weight: bold;
+    .card p{
+      line-height:1.8;
+      color:#555;
     }
 
-    .risk-high {
-      color: red;
-      font-weight: bold;
+    ul{
+      margin-top:15px;
+      padding-left:20px;
+      color:#555;
+    }
+
+    /* FORM */
+
+    .form-group{
+      margin-bottom:20px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:10px;
+      font-weight:500;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:15px;
+      border:1px solid #ddd;
+      border-radius:12px;
+      font-size:16px;
+      outline:none;
+    }
+
+    textarea{
+      resize:none;
+      height:140px;
+    }
+
+    .row{
+      display:flex;
+      gap:20px;
+    }
+
+    .row .form-group{
+      flex:1;
+    }
+
+    button{
+      width:100%;
+      padding:16px;
+      border:none;
+      border-radius:12px;
+      background:linear-gradient(90deg,#5f63ff,#6f4fff);
+      color:white;
+      font-size:18px;
+      font-weight:600;
+      cursor:pointer;
+      transition:.3s;
+    }
+
+    button:hover{
+      transform:translateY(-2px);
+      opacity:.95;
+    }
+
+    /* RESULT */
+
+    .result{
+      margin-top:25px;
+      padding:20px;
+      border-radius:15px;
+      font-size:18px;
+      display:none;
+    }
+
+    .low{
+      background:#d4f8d4;
+      color:#1d7a1d;
+    }
+
+    .moderate{
+      background:#fff2c7;
+      color:#9b7400;
+    }
+
+    .high{
+      background:#ffd6d6;
+      color:#c70000;
+    }
+
+    /* HISTORY */
+
+    .history-item{
+      background:#fafafa;
+      border:1px solid #eee;
+      border-radius:15px;
+      padding:18px;
+      margin-top:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .badge{
+      padding:8px 14px;
+      border-radius:10px;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .badge.low{
+      background:#d4f8d4;
+      color:#1d7a1d;
+    }
+
+    .badge.moderate{
+      background:#fff2c7;
+      color:#9b7400;
+    }
+
+    .badge.high{
+      background:#ffd6d6;
+      color:#c70000;
+    }
+
+    .tab-content{
+      display:none;
+    }
+
+    .tab-content.active{
+      display:block;
+    }
+
+    .stars{
+      display:flex;
+      gap:10px;
+      font-size:30px;
+      cursor:pointer;
+      color:#ccc;
+      margin-bottom:20px;
+    }
+
+    .star.active{
+      color:gold;
+    }
+
+    @media(max-width:768px){
+
+      .hero h1{
+        font-size:28px;
+      }
+
+      .row{
+        flex-direction:column;
+      }
+
+      .tabs{
+        flex-direction:column;
+      }
     }
   </style>
 </head>
-
 <body>
 
-<div class="container">
+  <!-- HERO -->
 
-  <h1>Pressure Ulcer Risk Assessment</h1>
-  <p>Sleep Positions & Weight-Based Model</p>
+  <section class="hero">
+    <h1>Pressure Ulcer Risk Assessment</h1>
+    <p>Assess risk from lying angle & body weight</p>
+  </section>
 
-  <div class="form-group">
-    <label>น้ำหนักตัว (kg)</label>
-    <input type="number" id="weight" placeholder="กรอกน้ำหนัก">
+  <!-- TABS -->
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('assessment',this)">
+      Assessment
+    </button>
+
+    <button class="tab-btn" onclick="showTab('history',this)">
+      History & Trends
+    </button>
+
+    <button class="tab-btn" onclick="showTab('feedback',this)">
+      Feedback
+    </button>
   </div>
 
-  <div class="form-group">
-    <label>ท่านอน</label>
-    <select id="position">
-      <option value="back">นอนหงาย</option>
-      <option value="side">นอนตะแคง</option>
-      <option value="stomach">นอนคว่ำ</option>
-    </select>
+  <div class="container">
+
+    <!-- ASSESSMENT -->
+
+    <div class="tab-content active" id="assessment">
+
+      <div class="card">
+        <h2>About This System</h2>
+
+        <p>
+          This tool evaluates the risk of pressure ulcer development
+          based on the patient's lying angle and body weight.
+        </p>
+
+        <ul>
+          <li>Quantifies pressure ulcer risk from 0 to 1+</li>
+          <li>Recommends optimal lying angles</li>
+          <li>Tracks assessment history over time</li>
+        </ul>
+      </div>
+
+      <div class="card">
+
+        <h2>Patient Assessment</h2>
+
+        <div class="form-group">
+          <label>Patient Name</label>
+          <input type="text" id="name" placeholder="Enter patient name">
+        </div>
+
+        <div class="row">
+
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input type="number" id="weight" placeholder="e.g. 70">
+          </div>
+
+          <div class="form-group">
+            <label>Lying Angle (0°–90°)</label>
+            <input type="number" id="angle" placeholder="e.g. 30">
+          </div>
+
+        </div>
+
+        <button onclick="calculateRisk()">
+          Calculate Risk
+        </button>
+
+        <div class="result" id="result"></div>
+
+      </div>
+
+    </div>
+
+    <!-- HISTORY -->
+
+    <div class="tab-content" id="history">
+
+      <div class="card">
+
+        <h2>Risk Trend Over Time</h2>
+
+        <canvas id="riskChart"></canvas>
+
+      </div>
+
+      <div class="card">
+
+        <h2>Assessment History</h2>
+
+        <div id="historyList"></div>
+
+      </div>
+
+    </div>
+
+    <!-- FEEDBACK -->
+
+    <div class="tab-content" id="feedback">
+
+      <div class="card">
+
+        <h2>User Feedback</h2>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="Optional">
+        </div>
+
+        <label>Rating</label>
+
+        <div class="stars">
+          <span class="star" onclick="rate(1)">★</span>
+          <span class="star" onclick="rate(2)">★</span>
+          <span class="star" onclick="rate(3)">★</span>
+          <span class="star" onclick="rate(4)">★</span>
+          <span class="star" onclick="rate(5)">★</span>
+        </div>
+
+        <div class="form-group">
+          <label>Comments</label>
+          <textarea placeholder="Share your experience..."></textarea>
+        </div>
+
+        <button>Submit Feedback</button>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <button onclick="calculateRisk()">
-    ประเมินความเสี่ยง
-  </button>
+  <script>
 
-  <div class="result" id="result"></div>
+    let chart;
+    let riskData = [];
 
-</div>
+    function showTab(id,btn){
 
-<script>
-function calculateRisk() {
+      document.querySelectorAll('.tab-content')
+      .forEach(tab=>{
+        tab.classList.remove('active');
+      });
 
-  const weight = parseFloat(document.getElementById("weight").value);
-  const position = document.getElementById("position").value;
+      document.querySelectorAll('.tab-btn')
+      .forEach(button=>{
+        button.classList.remove('active');
+      });
 
-  let score = 0;
+      document.getElementById(id)
+      .classList.add('active');
 
-  if(weight < 50){
-    score += 1;
-  } else if(weight < 80){
-    score += 2;
-  } else {
-    score += 3;
-  }
+      btn.classList.add('active');
+    }
 
-  if(position === "side"){
-    score += 2;
-  } else if(position === "back"){
-    score += 1;
-  } else {
-    score += 3;
-  }
+    function calculateRisk(){
 
-  const resultBox = document.getElementById("result");
+      const name = document.getElementById('name').value || "Unknown";
+      const weight = parseFloat(document.getElementById('weight').value);
+      const angle = parseFloat(document.getElementById('angle').value);
 
-  let riskText = "";
-  let className = "";
+      if(isNaN(weight) || isNaN(angle)){
+        alert("Please enter valid values");
+        return;
+      }
 
-  if(score <= 3){
-    riskText = "ความเสี่ยงต่ำ";
-    className = "risk-low";
-  } else if(score <= 5){
-    riskText = "ความเสี่ยงปานกลาง";
-    className = "risk-medium";
-  } else {
-    riskText = "ความเสี่ยงสูง";
-    className = "risk-high";
-  }
+      // FORMULA
 
-  resultBox.style.display = "block";
+      let risk =
+      ((-0.000102 * angle * angle)
+      + (0.00918 * angle)
+      + 0.5)
+      * (weight / 50);
 
-  resultBox.innerHTML = `
-    <h2>ผลการประเมิน</h2>
-    <p class="${className}">${riskText}</p>
-    <p>คะแนนความเสี่ยง: ${score}</p>
-  `;
-}
-</script>
+      risk = risk.toFixed(4);
+
+      const result = document.getElementById('result');
+
+      let level = "";
+      let className = "";
+
+      if(risk < 0.5){
+        level = "LOW RISK";
+        className = "low";
+      }
+      else if(risk < 0.8){
+        level = "MODERATE RISK";
+        className = "moderate";
+      }
+      else{
+        level = "HIGH RISK";
+        className = "high";
+      }
+
+      result.style.display = "block";
+      result.className = `result ${className}`;
+
+      result.innerHTML = `
+        <strong>${level}</strong><br><br>
+        Risk Score: ${risk}
+      `;
+
+      // SAVE HISTORY
+
+      const time = new Date().toLocaleString();
+
+      riskData.push({
+        name,
+        risk,
+        time,
+        level
+      });
+
+      renderHistory();
+      updateChart();
+    }
+
+    function renderHistory(){
+
+      const historyList =
+      document.getElementById('historyList');
+
+      historyList.innerHTML = "";
+
+      riskData.forEach(item=>{
+
+        let badgeClass = "";
+
+        if(item.level.includes("LOW")){
+          badgeClass = "low";
+        }
+        else if(item.level.includes("MODERATE")){
+          badgeClass = "moderate";
+        }
+        else{
+          badgeClass = "high";
+        }
+
+        historyList.innerHTML += `
+          <div class="history-item">
+
+            <div>
+              <strong>${item.name}</strong><br>
+              <small>${item.time}</small>
+            </div>
+
+            <div class="badge ${badgeClass}">
+              ${item.level} (${item.risk})
+            </div>
+
+          </div>
+        `;
+      });
+    }
+
+    function updateChart(){
+
+      const ctx =
+      document.getElementById('riskChart');
+
+      const labels =
+      riskData.map((_,index)=>`Assessment ${index+1}`);
+
+      const values =
+      riskData.map(item=>item.risk);
+
+      if(chart){
+        chart.destroy();
+      }
+
+      chart = new Chart(ctx,{
+
+        type:'line',
+
+        data:{
+          labels:labels,
+
+          datasets:[{
+            label:'Risk Score',
+            data:values,
+            tension:.4,
+            fill:true
+          }]
+        },
+
+        options:{
+          responsive:true
+        }
+
+      });
+    }
+
+    function rate(num){
+
+      const stars =
+      document.querySelectorAll('.star');
+
+      stars.forEach((star,index)=>{
+
+        if(index < num){
+          star.classList.add('active');
+        }
+        else{
+          star.classList.remove('active');
+        }
+
+      });
+    }
+
+  </script>
 
 </body>
 </html>
